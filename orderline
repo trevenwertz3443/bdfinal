@@ -5,7 +5,7 @@ import db
 import settings
 import project
 
-_TABLE_NAME = "order(o)"
+_TABLE_NAME = "order line(ol)"
 
 def create_table():
 	conn = db.create_connection(settings.DB_NAME)
@@ -13,7 +13,7 @@ def create_table():
 					-- tasks table
 					CREATE TABLE IF NOT EXISTS {_TABLE_NAME} (
 						id integer PRIMARY KEY,
-						creation_date text NOT NULL
+						name text NOT NULL,
 						priority integer,
 						project_id integer NOT NULL,
 						status_id integer NOT NULL,

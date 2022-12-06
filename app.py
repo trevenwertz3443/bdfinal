@@ -28,7 +28,7 @@ def menu():
 def main():
 	while True:
 		op = menu()
-		if op == 10:
+		if op == 9:
 			exit()
 		elif op == 1:
 			yn = input("Are you sure? [y/n]: ").lower()
@@ -39,7 +39,7 @@ def main():
 				task.create_table()
 		elif op == 2:
 			name = input("Enter project name: ")
-			st_date = input("When will the proect begin?: ")
+			st_date = input("When will the project begin?: ")
 			end_date = input("Enter end date: ")
 			pr = (name, st_date, end_date)
 			project.insert_table(pr)
