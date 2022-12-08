@@ -4,7 +4,7 @@ functions related to project table
 import db
 import settings
 
-_TABLE_NAME = "product(p)"
+_TABLE_NAME = "product"
 
 def create_table():
   conn = db.create_connection(settings.DB_NAME)
@@ -13,8 +13,8 @@ def create_table():
           CREATE TABLE IF NOT EXISTS %s (
             id integer primary key,
             name text NOT NULL,
-            quantity integer NOT NULL
-            warehouse VARCHAR(20)
+            quantity integer,
+            warehouse text 
           );
           """%(_TABLE_NAME)
 
@@ -24,7 +24,7 @@ def create_table():
     else:
       print('Project table could not be created!')
 
-def insert_table(project:tuple):
+def insert_table(product:tuple):
   sql = f"""
         INSERT INTO {_TABLE_NAME}(name, quantity, warehouse) VALUES 
         (?, ?, ?);
@@ -34,12 +34,12 @@ def insert_table(project:tuple):
   with conn:
     try:
       cursor = conn.cursor()
-      cursor.execute(sql, project)
+      cursor.execute(sql, product)
       conn.commit()
       projectid = cursor.lastrowid
       print('Project inserted successfully...')
     except Exception as ex:
-      print("Error: ", ex, sql, project)
+      print("Error: ", ex, sql, product)
 
   return projectid
 
@@ -55,7 +55,7 @@ def drop_table():
 
 def main():
   create_table()
-  project = ("phone", "84", "Paris")
+  project = ("phone", 84, "Paris")
   pid = insert_table(project)
   print('project id: ', pid)
   #drop_table()

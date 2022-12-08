@@ -18,7 +18,7 @@ def menu():
 			6: Show All Tasks
 			7: Delete Task
 			8: Show Project Tasks
-			10: Exit
+			9: Exit
 			"""
 	print(options)
 	print('>>>: ', end='')
@@ -58,14 +58,14 @@ def show_project_tasks():
 	show_projects()
 	pr_id = int(input('Enter Project ID: '))
 	sql = f'''
-				SELECT id, name, priority, status_id, begin_date, end_date 
+				SELECT creation_date, priority, customer, status_id 
 				FROM {task._TABLE_NAME} 
 				WHERE project_id=?
 				ORDER BY priority DESC
 			'''
 	title = f'Showing All Tasks For Project ID {pr_id}'
 	print(f'{title:^94}')
-	header = ['ID', 'Name', 'Priority', 'Project ID', 'Status ID', 'Begin Date', 'End Date']
+	header = ['ID', 'Creation Date', 'Priority', 'Customer', 'Status ID']
 	format = '{:^10}{:<30}{:^12}{:^12}{:<15}{:<15}'
 	print(format.format(*header))
 	print('='*94)
@@ -81,7 +81,7 @@ def update_task():
 	show_all_tasks()
 	task_id = int(input('Enter Task ID to Update: '))
 	priority = int(input("Enter Task Priority [1-5]: "))
-	rows = task.select_task(f'select begin_date, end_date from {task._TABLE_NAME} where id= {task_id}')
+	rows = task.select_task(f'select creation_date from {task._TABLE_NAME} where id= {task_id}')
 	begin_date = rows[0][0]
 	end_date = rows[0][1]
 	data = (priority, begin_date, end_date, task_id)
@@ -99,7 +99,7 @@ def delete_task():
 def show_all_tasks():
 	os.system('clear')
 	sql = f'''
-				SELECT id, name, priority, project_id, status_id, begin_date, end_date 
+				SELECT id, creation_date, priority, customer, status_id 
 				FROM {task._TABLE_NAME} 
 				ORDER BY priority DESC
 			'''

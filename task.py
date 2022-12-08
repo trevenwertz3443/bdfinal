@@ -1,59 +1,56 @@
 """
-functions related to task table
+functions related to order table
 """
 import db
 import settings
-import project
 
-_TABLE_NAME = "order(o)"
+
+_TABLE_NAME = 'order'
 
 def create_table():
 	conn = db.create_connection(settings.DB_NAME)
 	sql = f"""
-					-- tasks table
+					-- order table
 					CREATE TABLE IF NOT EXISTS {_TABLE_NAME} (
 						id integer PRIMARY KEY,
-						creation_date text NOT NULL
+						creation_date text NOT NULL,
+						project_id integer NOT NULL
 						priority integer,
-						project_id integer NOT NULL,
-						status_id integer NOT NULL,
-						begin_date text NOT NULL,
-						end_date text NOT NULL,
-						FOREIGN KEY (project_id) REFERENCES {project._TABLE_NAME} (id)
+						customer integer NOT NULL,
+						status_id integer NOT NULL
 					);
 					"""
 	with conn:
 		success = db.create_table(conn, sql)
 		if success:
-			print('Tasks table created successfully!')
+			print('Order table created successfully!')
 		else:
-			print("Tasks table couldn't be created!")
+			print("Order table couldn't be created!")
 
-def insert_task(task:tuple):
+def insert_order(order:tuple):
   sql = f"""
-          INSERT INTO {_TABLE_NAME}(name, priority, status_id, project_id, begin_date, end_date)
-          VALUES(?,?,?,?,?,?);
+          INSERT INTO {_TABLE_NAME}(creation_date, priority, customer, status_id, project_id)
+          VALUES(?,?,?,?,?);
         """
 
   conn = db.create_connection(settings.DB_NAME)
   with conn:
     cur = conn.cursor()
-    cur.execute(sql, task)
+    cur.execute(sql, order)
 
-def update_task(task:tuple):
+def update_order(order:tuple):
 	sql = f"""
 				UPDATE {_TABLE_NAME} 
 				SET priority = ?,
-					begin_date = ?,
-					end_date = ?
+					creation_date
 				WHERE id = ?
 				"""
 	conn = db.create_connection(settings.DB_NAME)
 	with conn:
 		cur = conn.cursor()
-		cur.execute(sql, task)
+		cur.execute(sql, order)
 	
-def delete_task(task_id:tuple):
+def delete_order(order_id:tuple):
 	sql = f"""
 				DELETE FROM {_TABLE_NAME}
 				WHERE id = ?
@@ -61,7 +58,7 @@ def delete_task(task_id:tuple):
 	conn = db.create_connection(settings.DB_NAME)
 	with conn:
 		cur = conn.cursor()
-		cur.execute(sql, task_id)
+		cur.execute(sql, order_id)
 
 def drop_table():
   conn = db.create_connection(settings.DB_NAME)
@@ -73,7 +70,7 @@ def drop_table():
     cur.execute(sql)
     print(f'Table {_TABLE_NAME} dropped!')
 
-def select_tasks(sql:str, para=None):
+def select_order(sql:str, para=None):
 	conn = db.create_connection(settings.DB_NAME)
 	rows = []
 	headers = []
@@ -88,37 +85,36 @@ def select_tasks(sql:str, para=None):
 
 def main():
 	project_id = 1
-	task_1 = ('Analyze the requirements of the app', 1, 1, project_id, '2015-01-01', '2015-01-02')
-	task_2 = ('Confirm with user about the top requirements', 1, 1, project_id, '2015-01-03', '2015-01-05')
-	insert_task(task_1)
-	insert_task(task_2)
+	order_1 = ('Analyze the requirements of the app', project_id, 1, '2017-08-11', 1)
+	order_2 = ('Confirm with user about the top requirements', project_id, 1, '2017-08-13', 2)
+	insert_order(order_1)
+	insert_order(order_2)
 
-def test_update_task():
-	task_id = 1
-	begin_date = '2022-11-15'
-	end_date = '2022-12-10'
+def test_update_order():
+	order_id = 1
+	creation_date = '2017-08-11'
 	priority = 2
-	task = (priority, begin_date, end_date, task_id)
-	update_task(task)
-	print("Task updated successfully!", task_id)
+	order = (priority, creation_date, order_id)
+	update_order(order)
+	print("Order updated successfully!", order_id)
 
-def test_delete_task():
-	task_id = 1
-	delete_task((task_id,))
-	print(f'Task id: {task_id} deleted successfully!')
+def test_delete_order():
+	order_id = 1
+	delete_order((order_id,))
+	print(f'Order id: {order_id} deleted successfully!')
 
-def select_task(sql:str):
+def select_order(sql:str):
 	conn = db.create_connection(settings.DB_NAME)
 	cur = conn.cursor()
 	cur.execute(sql)
 	rows = cur.fetchall()
 	return rows
 
-def test_select_task():
+def test_select_order():
 	sql = f"""
 				SELECT * FROM {_TABLE_NAME};
 				"""
-	rows = select_task(sql)
+	rows = select_order(sql)
 	for row in rows:
 		print(row)
 	print('=======')
@@ -126,9 +122,9 @@ def test_select_task():
 				SELECT * FROM {_TABLE_NAME}
 				WHERE id = 2;
 				"""
-	rows = select_task(sql)
+	rows = select_order(sql)
 	for row in rows:
 		print(row)
 
 if __name__ == "__main__":
-	test_select_task()
+	test_select_order()
