@@ -42,7 +42,7 @@ def update_order(order:tuple):
 	sql = f"""
 				UPDATE {_TABLE_NAME} 
 				SET priority = ?,
-					creation_date
+					creation_date = ?
 				WHERE id = ?
 				"""
 	conn = db.create_connection(settings.DB_NAME)
@@ -82,11 +82,11 @@ def select_order(sql:str, para=None):
 		rows = cur.fetchall()
 		headers = cur.description
 	return headers, rows
-
+#creation_date, priority, customer, status_id, project_id
 def main():
 	project_id = 1
-	order_1 = ('Analyze the requirements of the app', project_id, 1, '2017-08-11', 1)
-	order_2 = ('Confirm with user about the top requirements', project_id, 1, '2017-08-13', 2)
+	order_1 = ('Analyze the requirements of the app', '2017-08-11', 1, 1, 1, project_id)
+	order_2 = ('Confirm with user about the top requirements','2017-08-13', 2, 2, 2, project_id)
 	insert_order(order_1)
 	insert_order(order_2)
 

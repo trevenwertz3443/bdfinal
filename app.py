@@ -37,11 +37,11 @@ def main():
 				project.drop_table()
 				project.create_table()
 				task.create_table()
+				
 		elif op == 2:
-			name = input("Enter project name: ")
-			st_date = input("When will the project begin?: ")
-			end_date = input("Enter end date: ")
-			pr = (name, st_date, end_date)
+			name = input("Enter business name: ")
+			creation_date = input("Enter creation date: ")
+			pr = (name, creation_date)
 			project.insert_table(pr)
 		elif op == 3:
 			create_new_task()

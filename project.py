@@ -1,5 +1,5 @@
 """
-functions related to project table
+functions related to product table
 """
 import db
 import settings

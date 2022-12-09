@@ -4,7 +4,7 @@ functions related to orderline table
 import db
 import settings
 
-_TABLE_NAME = 'orderline'
+_TABLE_NAME = "orderline"
 
 def create_table():
   conn = db.create_connection(settings.DB_NAME)
@@ -13,7 +13,7 @@ def create_table():
           CREATE TABLE IF NOT EXISTS %s (
             id integer primary key,
             order text NOT NULL,
-            product VARCHAR(20),
+            product text NOT NULL,
             quantity integer NOT NULL,
             price integer NOT NULL
           );
@@ -31,18 +31,18 @@ def insert_table(orderline:tuple):
         (?, ?, ?, ?);
         """
   conn = db.create_connection(settings.DB_NAME)
-  orderlineid = None
+  projectid = None
   with conn:
     try:
       cursor = conn.cursor()
       cursor.execute(sql, orderline)
       conn.commit()
-      orderlineid = cursor.lastrowid
+      projectid = cursor.lastrowid
       print('Orderline inserted successfully...')
     except Exception as ex:
       print("Error: ", ex, sql, orderline)
 
-  return orderlineid
+  return projectid
 
 def drop_table():
   conn = db.create_connection(settings.DB_NAME)
@@ -56,12 +56,12 @@ def drop_table():
 
 def main():
   create_table()
-  orderline = ("ol", "phone", 2, 1190)
-  pid = insert_table(orderline)
+  project = ("ol", "phone", 2, 1190)
+  pid = insert_table(project)
   print('orderline id: ', pid)
   #drop_table()
 
-def select_orderline(sql:str):
+def select_project(sql:str):
 	conn = db.create_connection(settings.DB_NAME)
 	rows = []
 	headers = []
